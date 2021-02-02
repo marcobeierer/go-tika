@@ -14,7 +14,7 @@ limitations under the License.
 */
 
 /*
-Package tika provides a client for using Apache Tika's (http://tika.apache.org) Server.
+Package tika provides a client for using Apache Tika's (http://tika.apache.org) Server API.
 
 To parse the contents of a file (or any io.Reader), you will need to open the io.Reader,
 create a client, and call client.Parse.
