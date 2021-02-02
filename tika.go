@@ -25,6 +25,7 @@ import (
 	"net/http"
 	"reflect"
 	"strings"
+	"time"
 
 	"golang.org/x/net/context/ctxhttp"
 )
@@ -66,8 +67,16 @@ type Client struct {
 }
 
 // NewClient creates a new Client. If httpClient is nil, the http.DefaultClient will be
-// used.
+// used. Be aware that http.DefaultClient has no timeout set.
 func NewClient(httpClient *http.Client, urlString string) *Client {
+	return &Client{httpClient: httpClient, url: urlString}
+}
+
+// NewDefaultClient creates a new Client with a request timeout of 60 seconds.
+func NewDefaultClient(urlString string) *Client {
+	httpClient := &http.Client{
+		Timeout: time.Second * 60, // TODO are 60 seconds enough for all OCR requests?
+	}
 	return &Client{httpClient: httpClient, url: urlString}
 }
 
