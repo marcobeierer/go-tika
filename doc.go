@@ -14,34 +14,7 @@ limitations under the License.
 */
 
 /*
-Package tika provides a client and server for downloading, starting, and using Apache Tika's (http://tika.apache.org) Server.
-
-Start with basic imports:
-
-	import "github.com/google/go-tika/tika"
-
-You will need a running Server to make API calls to. So, if you don't
-have a server that is already running and you don't have the Server
-JAR already downloaded, you can download one. The caller is responsible
-for removing the file when no longer needed.
-
-	err := tika.DownloadServer(context.Background(), "1.16", "tika-server-1.16.jar")
-	if err != nil {
-		log.Fatal(err)
-	}
-
-If you don't have a running Tika Server, you can start one.
-
-	// Optionally pass a port as the second argument.
-	s, err := tika.NewServer("tika-server-1.16.jar", "")
-	if err != nil {
-		log.Fatal(err)
-	}
-	err := s.Start(context.Background())
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer s.Stop()
+Package tika provides a client for using Apache Tika's (http://tika.apache.org) Server.
 
 To parse the contents of a file (or any io.Reader), you will need to open the io.Reader,
 create a client, and call client.Parse.
@@ -53,7 +26,9 @@ create a client, and call client.Parse.
 	}
 	defer f.Close()
 
-	client := tika.NewClient(nil, s.URL())
+	serverURL := "TODO"
+
+	client := tika.NewClient(nil, serverURL)
 	body, err := client.Parse(context.Background(), f)
 
 If you pass an *http.Client to tika.NewClient, it will be used for all requests.
