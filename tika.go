@@ -148,8 +148,8 @@ func (c *Client) call(ctx context.Context, input io.Reader, method, path string,
 
 // callString makes the given request to c and returns the result as a string
 // and error. callString returns an error if the response code is not 200 StatusOK.
-func (c *Client) callString(ctx context.Context, input io.Reader, method, path string) (string, error) {
-	body, err := c.call(ctx, input, method, path, nil)
+func (c *Client) callString(ctx context.Context, input io.Reader, method, path string, header http.Header) (string, error) {
+	body, err := c.call(ctx, input, method, path, header)
 	if err != nil {
 		return "", err
 	}
@@ -159,7 +159,25 @@ func (c *Client) callString(ctx context.Context, input io.Reader, method, path s
 // Parse parses the given input, returning the body of the input and an error.
 // If the error is not nil, the body is undefined.
 func (c *Client) Parse(ctx context.Context, input io.Reader) (string, error) {
-	return c.callString(ctx, input, "PUT", "/tika")
+	return c.callString(ctx, input, "PUT", "/tika", nil)
+}
+
+// ParseText parses the given input, returning the body of the input as text and an error.
+// If the error is not nil, the body is undefined.
+func (c *Client) ParseText(ctx context.Context, input io.Reader) (string, error) {
+	header := http.Header{}
+	header.Add("Accept", "text/plain")
+
+	return c.callString(ctx, input, "PUT", "/tika", header)
+}
+
+// ParseHTML parses the given input, returning the body of the input as HTML and an error.
+// If the error is not nil, the body is undefined.
+func (c *Client) ParseHTML(ctx context.Context, input io.Reader) (string, error) {
+	header := http.Header{}
+	header.Add("Accept", "text/html")
+
+	return c.callString(ctx, input, "PUT", "/tika", header)
 }
 
 // ParseRecursive parses the given input and all embedded documents, returning a
@@ -183,26 +201,26 @@ func (c *Client) ParseRecursive(ctx context.Context, input io.Reader) ([]string,
 // Meta parses the metadata from the given input, returning the metadata and an
 // error. If the error is not nil, the metadata is undefined.
 func (c *Client) Meta(ctx context.Context, input io.Reader) (string, error) {
-	return c.callString(ctx, input, "PUT", "/meta")
+	return c.callString(ctx, input, "PUT", "/meta", nil)
 }
 
 // MetaField parses the metadata from the given input and returns the given
 // field. If the error is not nil, the result string is undefined.
 func (c *Client) MetaField(ctx context.Context, input io.Reader, field string) (string, error) {
-	return c.callString(ctx, input, "PUT", fmt.Sprintf("/meta/%v", field))
+	return c.callString(ctx, input, "PUT", fmt.Sprintf("/meta/%v", field), nil)
 }
 
 // Detect gets the mimetype of the given input, returning the mimetype and an
 // error. If the error is not nil, the mimetype is undefined.
 func (c *Client) Detect(ctx context.Context, input io.Reader) (string, error) {
-	return c.callString(ctx, input, "PUT", "/detect/stream")
+	return c.callString(ctx, input, "PUT", "/detect/stream", nil)
 }
 
 // Language detects the language of the given input, returning the two letter
 // language code and an error. If the error is not nil, the language is
 // undefined.
 func (c *Client) Language(ctx context.Context, input io.Reader) (string, error) {
-	return c.callString(ctx, input, "PUT", "/language/stream")
+	return c.callString(ctx, input, "PUT", "/language/stream", nil)
 }
 
 // LanguageString detects the language of the given string, returning the two letter
@@ -210,7 +228,7 @@ func (c *Client) Language(ctx context.Context, input io.Reader) (string, error) 
 // undefined.
 func (c *Client) LanguageString(ctx context.Context, input string) (string, error) {
 	r := strings.NewReader(input)
-	return c.callString(ctx, r, "PUT", "/language/string")
+	return c.callString(ctx, r, "PUT", "/language/string", nil)
 }
 
 // MetaRecursive parses the given input and all embedded documents. The result
@@ -268,12 +286,12 @@ func (c *Client) MetaRecursiveType(ctx context.Context, input io.Reader, content
 // Translate returns an error and the translated input from src language to
 // dst language using t. If the error is not nil, the translation is undefined.
 func (c *Client) Translate(ctx context.Context, input io.Reader, t Translator, src, dst string) (string, error) {
-	return c.callString(ctx, input, "POST", fmt.Sprintf("/translate/all/%s/%s/%s", t, src, dst))
+	return c.callString(ctx, input, "POST", fmt.Sprintf("/translate/all/%s/%s/%s", t, src, dst), nil)
 }
 
 // Version returns the default hello message from Tika server.
 func (c *Client) Version(ctx context.Context) (string, error) {
-	return c.callString(ctx, nil, "GET", "/version")
+	return c.callString(ctx, nil, "GET", "/version", nil)
 }
 
 var jsonHeader = http.Header{"Accept": []string{"application/json"}}
