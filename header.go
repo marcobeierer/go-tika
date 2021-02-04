@@ -7,7 +7,9 @@ type Header struct {
 }
 
 func NewHeader() Header {
-	return Header{}
+	return Header{
+		http.Header{},
+	}
 }
 
 func (qq Header) AcceptText() Header {
@@ -18,6 +20,7 @@ func (qq Header) AcceptText() Header {
 // OCRLanguage accepts string in format "eng+deu+spa"
 // language codes are in ISO-639-2 format
 func (qq Header) SetOCRLanguage(language string) Header {
+	// TODO validate string?
 	qq.Add("X-Tika-OCRLanguage", language)
 	return qq
 }
