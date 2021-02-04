@@ -17,7 +17,7 @@ func (qq Header) AcceptText() Header {
 
 // OCRLanguage accepts string in format "eng+deu+spa"
 // language codes are in ISO-639-2 format
-func (qq Header) SetOCRLanguages(languages string) Header {
-	qq.Add("X-Tika-OCRLanguage", languages)
+func (qq Header) SetOCRLanguage(language string) Header {
+	qq.Add("X-Tika-OCRLanguage", language)
 	return qq
 }

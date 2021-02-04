@@ -162,6 +162,7 @@ func (c *Client) Parse(ctx context.Context, input io.Reader, header Header) (str
 	return c.callString(ctx, input, "PUT", "/tika", header.Header)
 }
 
+/*
 // ParseText parses the given input, returning the body of the input as text and an error.
 // If the error is not nil, the body is undefined.
 func (c *Client) ParseText(ctx context.Context, input io.Reader) (string, error) {
@@ -179,6 +180,7 @@ func (c *Client) ParseHTML(ctx context.Context, input io.Reader) (string, error)
 
 	return c.callString(ctx, input, "PUT", "/tika", header)
 }
+*/
 
 // ParseRecursive parses the given input and all embedded documents, returning a
 // list of the contents of the input with one element per document. See
