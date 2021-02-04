@@ -158,8 +158,8 @@ func (c *Client) callString(ctx context.Context, input io.Reader, method, path s
 
 // Parse parses the given input, returning the body of the input and an error.
 // If the error is not nil, the body is undefined.
-func (c *Client) Parse(ctx context.Context, input io.Reader) (string, error) {
-	return c.callString(ctx, input, "PUT", "/tika", nil)
+func (c *Client) Parse(ctx context.Context, input io.Reader, header Header) (string, error) {
+	return c.callString(ctx, input, "PUT", "/tika", header.Header)
 }
 
 // ParseText parses the given input, returning the body of the input as text and an error.
